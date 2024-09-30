@@ -51,6 +51,22 @@ router.put("/posts/:post_id", async (req, res) => {
     );
 
     res.status(200).json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(404).send(err.message);
+  }
+});
+
+router.delete("/posts/:post_id", async (req, res) => {
+  const post_id = req.params.post_id;
+
+  try {
+    const result = await db.query(
+      "DELETE FROM posts WHERE post_id = $1 RETURNING *",
+      [post_id]
+    );
+
+    res.status(200).json({msg: "Successfully delete post", data: result.rows[0]});
   } catch (err) {}
 });
 
