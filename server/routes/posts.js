@@ -66,8 +66,13 @@ router.delete("/posts/:post_id", async (req, res) => {
       [post_id]
     );
 
-    res.status(200).json({msg: "Successfully delete post", data: result.rows[0]});
-  } catch (err) {}
+    res
+      .status(200)
+      .json({ msg: "Successfully delete post", data: result.rows[0] });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ msg: "Error deleting the post" });
+  }
 });
 
 module.exports = router;
