@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 function SignupForm() {
   const [signUpData, setSignUpData] = useState({
@@ -14,9 +15,21 @@ function SignupForm() {
       [e.target.name]: e.target.value,
     });
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("click");
+
+    try {
+      const response = await axios.post("http://localhost:8001/api/users", signUpData);
+      console.log(response.data);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
   return (
     <div>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="signUpName" className="form-label">
             Username
