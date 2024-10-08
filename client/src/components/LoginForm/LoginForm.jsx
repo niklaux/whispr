@@ -6,6 +6,7 @@ function LoginForm() {
     email: "",
     password: "",
   });
+  const [errorMessage, setErrorMessage] = useState(""); // For showing errors if login fails
 
   const handleLoginForm = (e) => {
     setLoginForm({
@@ -24,15 +25,23 @@ function LoginForm() {
       );
 
       if (response.status === 200) {
-        console.log("sucessful login!");
+        const token = response.data.token;
+        // Store token in localStorage or sessionStorage
+        localStorage.setItem("token", token);
+
+        console.log("Successful login!");
+        // Optionally, redirect the user to another page after login
+        // window.location.href = "/dashboard"; // Example of redirecting to a dashboard
       }
     } catch (err) {
-      console.error(err.message);
+      console.error("Login failed:", err.message);
+      setErrorMessage("Login failed. Please check your email and password.");
     }
   };
+
   return (
     <div>
-      <form onSubmit={handleSubmit} className="" >
+      <form onSubmit={handleSubmit} className="">
         <div className="mb-3">
           <label htmlFor="loginEmail" className="form-label">
             Email address
@@ -45,6 +54,7 @@ function LoginForm() {
             name="email"
             value={loginForm.email}
             onChange={handleLoginForm}
+            required
           />
         </div>
         <div className="mb-3">
@@ -59,8 +69,14 @@ function LoginForm() {
             name="password"
             value={loginForm.password}
             onChange={handleLoginForm}
+            required
           />
         </div>
+        {errorMessage && (
+          <div className="alert alert-danger" role="alert">
+            {errorMessage}
+          </div>
+        )}
         <div className="d-grid">
           <button type="submit" className="btn btn-primary">
             Login

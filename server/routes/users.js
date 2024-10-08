@@ -1,8 +1,29 @@
 const express = require("express");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const router = express.Router();
 const db = require("../db");
 
-router.get("/users", async (req, res) => {
+const SECRET_KEY = "password123!";
+
+// Middleware
+const verifyToken = (req, res, next) => {
+  const token = req.headers["authorization"];
+
+  if (!token) {
+    return res.status(403).json({ msg: "Token is required" });
+  }
+
+  try {
+    const decoded = jwt.verify(token.split(" ")[1], SECRET_KEY);
+    req.user = decoded;
+    next();
+  } catch (error) {
+    return res.status(401).json({ msg: "Invalid Token" });
+  }
+};
+
+router.get("/users", verifyToken, async (req, res) => {
   try {
     const result = await db.query("SELECT * FROM users");
     res.status(200).json(result.rows);
@@ -20,9 +41,12 @@ router.post("/users", async (req, res) => {
   }
 
   try {
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
     const result = await db.query(
       "INSERT INTO users (username, email, password_hash) VALUES ($1, $2, $3) RETURNING *",
-      [username, email, password]
+      [username, email, hashedPassword]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {
@@ -34,9 +58,9 @@ router.post("/users", async (req, res) => {
 router.post("/users/login", async (req, res) => {
   const { email, password } = req.body;
 
-  // check if username is present
   try {
-    const result = await db.query("SELECT * FROM users where email = $1", [
+    // Check if the user exists
+    const result = await db.query("SELECT * FROM users WHERE email = $1", [
       email,
     ]);
 
@@ -44,11 +68,21 @@ router.post("/users/login", async (req, res) => {
       return res.status(404).json({ msg: "User Not Found" });
     }
 
-    if (result.rows[0].password_hash !== password) {
-      return res.status(404).json({ msg: "Password Incorrect" });
+    const user = result.rows[0];
+
+    // Verify the password
+    const isPasswordValid = await bcrypt.compare(password, user.password_hash);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({ msg: "Password Incorrect" });
     }
 
-    res.status(200).json({ msg: "Successful Login" });
+    // Create a JWT token
+    const token = jwt.sign({ id: user.id, email: user.email }, SECRET_KEY, {
+      expiresIn: "1h", // Token expires in 1 hour
+    });
+
+    res.status(200).json({ msg: "Successful Login", token });
   } catch (err) {
     console.error(err.message);
     res.status(500).json(err.message);
