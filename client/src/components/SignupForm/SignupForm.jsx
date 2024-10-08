@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import axios from "axios";
 
 function SignupForm() {
-  const [signUpData, setSignUpData] = useState({
+  const initialFormData = {
     username: "",
     email: "",
     password: "",
-  });
+  };
+  const [signUpData, setSignUpData] = useState(initialFormData);
 
   const handleSignUpData = (e) => {
-    console.log(e.target.value);
     setSignUpData({
       ...signUpData,
       [e.target.name]: e.target.value,
@@ -18,10 +18,12 @@ function SignupForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("click");
-
     try {
-      const response = await axios.post("http://localhost:8001/api/users", signUpData);
+      const response = await axios.post(
+        "http://localhost:8001/api/users",
+        signUpData
+      );
+      setSignUpData(initialFormData);
       console.log(response.data);
     } catch (err) {
       console.error(err.message);

@@ -12,13 +12,13 @@ function LoginPage() {
 
   return (
     <div
-      className="container d-flex flex-column justify-content-center"
+      className="d-flex flex-column justify-content-center common-bg-color overflow-hidden"
       style={{ height: "100vh" }}
     >
       <div className="row justify-content-center">
-        <div className="col-md-6">
-          <div className="card shadow border-0 rounded-5">
-            <div className="card-body">
+        <div className="col-md-5 col-lg-3 col-10">
+          <div className="card shadow-sm border-0 rounded-5">
+            <div className="card-body px-4">
               <h3 className="text-center mb-4">
                 {isLogin ? "Login" : "Sign Up"}
               </h3>

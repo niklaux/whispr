@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 function LoginForm() {
   const [loginForm, setLoginForm] = useState({
@@ -7,15 +8,31 @@ function LoginForm() {
   });
 
   const handleLoginForm = (e) => {
-    console.log(e.target.value);
     setLoginForm({
       ...loginForm,
       [e.target.name]: e.target.value,
     });
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8001/api/users/login",
+        loginForm
+      );
+
+      if (response.status === 200) {
+        console.log("sucessful login!");
+      }
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
   return (
     <div>
-      <form>
+      <form onSubmit={handleSubmit} className="" >
         <div className="mb-3">
           <label htmlFor="loginEmail" className="form-label">
             Email address

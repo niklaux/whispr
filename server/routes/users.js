@@ -18,7 +18,7 @@ router.post("/users", async (req, res) => {
   if (!username || !email || !password) {
     return res.status(400).json({ error: "All fields are required" });
   }
-  
+
   try {
     const result = await db.query(
       "INSERT INTO users (username, email, password_hash) VALUES ($1, $2, $3) RETURNING *",
@@ -28,6 +28,30 @@ router.post("/users", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(400).send(err.message);
+  }
+});
+
+router.post("/users/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  // check if username is present
+  try {
+    const result = await db.query("SELECT * FROM users where email = $1", [
+      email,
+    ]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ msg: "User Not Found" });
+    }
+
+    if (result.rows[0].password_hash !== password) {
+      return res.status(404).json({ msg: "Password Incorrect" });
+    }
+
+    res.status(200).json({ msg: "Successful Login" });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json(err.message);
   }
 });
 
