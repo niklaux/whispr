@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { loginUser } from "../../services/users";
 
 function LoginForm() {
   const [loginForm, setLoginForm] = useState({
@@ -19,22 +19,18 @@ function LoginForm() {
     e.preventDefault();
 
     try {
-      const response = await axios.post(
-        "http://localhost:8001/api/users/login",
-        loginForm
-      );
+      // Call the loginUser function and get the token
+      const data = await loginUser(loginForm);
+      const token = data.token;
 
-      if (response.status === 200) {
-        const token = response.data.token;
-        // Store token in localStorage or sessionStorage
-        localStorage.setItem("token", token);
+      // Store token in localStorage or sessionStorage
+      localStorage.setItem("token", token);
 
-        console.log("Successful login!");
-        // Optionally, redirect the user to another page after login
-        // window.location.href = "/dashboard"; // Example of redirecting to a dashboard
-      }
+      console.log("Successful login!");
+      // Optionally, redirect the user to another page after login
+      // window.location.href = "/dashboard"; // Example of redirecting to a dashboard
     } catch (err) {
-      console.error("Login failed:", err.message);
+      console.error("Login failed:", err);
       setErrorMessage("Login failed. Please check your email and password.");
     }
   };

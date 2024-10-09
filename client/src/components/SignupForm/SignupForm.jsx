@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { signupUser } from "../../services/users"; // Your service function to make the API call
 
 function SignupForm() {
   const initialFormData = {
@@ -8,6 +8,7 @@ function SignupForm() {
     password: "",
   };
   const [signUpData, setSignUpData] = useState(initialFormData);
+  const [message, setMessage] = useState(""); // For success/error messages
 
   const handleSignUpData = (e) => {
     setSignUpData({
@@ -18,17 +19,23 @@ function SignupForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage(""); // Clear previous messages
+
     try {
-      const response = await axios.post(
-        "http://localhost:8001/api/users",
-        signUpData
-      );
-      setSignUpData(initialFormData);
-      console.log(response.data);
+      const response = await signupUser(signUpData); // Make API call
+
+      if (response.status === 201) {
+        // Success: account was created
+        setSignUpData(initialFormData); // Reset form
+        setMessage("Account created successfully!"); // Show success message
+      }
     } catch (err) {
-      console.error(err.message);
+      const errorMsg =
+        err.response?.data?.error || "An error occurred. Please try again.";
+      setMessage(errorMsg); // Show backend error or generic error message
     }
   };
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -44,6 +51,7 @@ function SignupForm() {
             name="username"
             value={signUpData.username}
             onChange={handleSignUpData}
+            required
           />
         </div>
         <div className="mb-3">
@@ -58,6 +66,7 @@ function SignupForm() {
             name="email"
             value={signUpData.email}
             onChange={handleSignUpData}
+            required
           />
         </div>
         <div className="mb-3">
@@ -72,8 +81,18 @@ function SignupForm() {
             name="password"
             value={signUpData.password}
             onChange={handleSignUpData}
+            required
           />
         </div>
+        {message && (
+          <div
+            className={`alert ${
+              message.includes("success") ? "alert-success" : "alert-danger"
+            }`}
+          >
+            {message}
+          </div>
+        )}
         <div className="d-grid">
           <button type="submit" className="btn btn-success">
             Sign Up
