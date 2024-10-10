@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { loginUser } from "../../services/users";
+import { useNavigate } from "react-router-dom";
 
 function LoginForm() {
   const [loginForm, setLoginForm] = useState({
     email: "",
     password: "",
   });
-  const [errorMessage, setErrorMessage] = useState(""); // For showing errors if login fails
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleLoginForm = (e) => {
     setLoginForm({
@@ -27,8 +29,7 @@ function LoginForm() {
       localStorage.setItem("token", token);
 
       console.log("Successful login!");
-      // Optionally, redirect the user to another page after login
-      // window.location.href = "/dashboard"; // Example of redirecting to a dashboard
+      navigate("/feed");
     } catch (err) {
       console.error("Login failed:", err);
       setErrorMessage("Login failed. Please check your email and password.");

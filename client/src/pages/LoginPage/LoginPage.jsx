@@ -2,8 +2,11 @@ import React from "react";
 import { useState } from "react";
 import LoginForm from "../../components/LoginForm/LoginForm";
 import SignupForm from "../../components/SignupForm/SignupForm";
+import useAuth from "../../hooks/useAuth";
 
 function LoginPage() {
+  useAuth();
+  
   const [isLogin, setIsLogin] = useState(true);
 
   const toggleForm = () => {
