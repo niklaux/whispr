@@ -13,9 +13,8 @@ router.get("/posts", async (req, res) => {
   }
 });
 
-router.post("/posts/:user_id", async (req, res) => {
-  const user_id = req.params.user_id;
-  const { content } = req.body;
+router.post("/posts", async (req, res) => {
+  const { content, user_id } = req.body;
 
   if (!content) {
     return res.status(400).json({ msg: "Content field is required" });

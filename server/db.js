@@ -8,25 +8,39 @@ if (!process.env.POSTGRES_URL) {
   );
 }
 
-// Create a new pool using the environment variable for the PostgreSQL connection string
+// Create a new pool with specified connection parameters
 const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,
   ssl: {
-    rejectUnauthorized: false, // For SSL connections (e.g., with Vercel)
+    rejectUnauthorized: false, // Allows self-signed SSL certificates (not recommended for production)
   },
-  connectionTimeoutMillis: 10000, // Wait up to 10 seconds for a connection
-  idleTimeoutMillis: 30000, // Close idle connections after 30 seconds
-  max: 20, // Limit the number of clients in the pool
+  connectionTimeoutMillis: 20000, // Connection timeout
+  idleTimeoutMillis: 60000, // Keep idle connections for 60 seconds
+  max: 20, // Maximum number of connections in the pool
 });
 
-// Keep the connection alive to avoid suspension due to inactivity
+// Error handler for idle clients
+pool.on("error", (err) => {
+  console.error("Unexpected error on idle client", err);
+  // You may want to add reconnect logic or other custom handling here
+});
+
+// Keep-alive mechanism to prevent idle timeouts
 setInterval(() => {
   pool
     .query("SELECT 1")
-    .catch((err) => console.error("Keep-alive query failed:", err));
-}, 4 * 60 * 1000); // Run every 4 minutes to prevent suspension (Vercel's timeout is 5 minutes)
+    .catch((err) => console.error("Keep-alive error:", err));
+}, 280000); // Every 4 minutes and 40 seconds
 
 // Export the query function for use in other parts of the app
 module.exports = {
-  query: (text, params) => pool.query(text, params),
+  query: async (text, params) => {
+    try {
+      return await pool.query(text, params);
+    } catch (err) {
+      console.error("Query error:", err.message);
+      // Optional: retry logic or custom handling can be added here
+      throw err; // Rethrow the error after logging
+    }
+  },
 };

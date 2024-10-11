@@ -21,15 +21,17 @@ function LoginForm() {
     e.preventDefault();
 
     try {
-      // Call the loginUser function and get the token
+      // Call the loginUser function and get the token and user info
       const data = await loginUser(loginForm);
-      const token = data.token;
+      const { token, user } = data;
+      const user_id = user.user_id;  // Get user_id from the user object
 
-      // Store token in localStorage or sessionStorage
+      // Store token and user_id in localStorage
       localStorage.setItem("token", token);
+      localStorage.setItem("user_id", user_id); // Save user_id
 
       console.log("Successful login!");
-      navigate("/feed");
+      navigate("/feed"); // Navigate to feed after successful login
     } catch (err) {
       console.error("Login failed:", err);
       setErrorMessage("Login failed. Please check your email and password.");
@@ -45,7 +47,7 @@ function LoginForm() {
           </label>
           <input
             type="email"
-            className="form-control"
+            className="form-control rounded-5"
             id="loginEmail"
             placeholder="Enter your email"
             name="email"
@@ -60,7 +62,7 @@ function LoginForm() {
           </label>
           <input
             type="password"
-            className="form-control"
+            className="form-control rounded-5"
             id="loginPassword"
             placeholder=""
             name="password"
@@ -75,7 +77,7 @@ function LoginForm() {
           </div>
         )}
         <div className="d-grid">
-          <button type="submit" className="btn btn-primary">
+          <button type="submit" className="btn btn-primary rounded-5">
             Login
           </button>
         </div>

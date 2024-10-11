@@ -6,7 +6,7 @@ import useAuth from "../../hooks/useAuth";
 
 function LoginPage() {
   useAuth();
-  
+
   const [isLogin, setIsLogin] = useState(true);
 
   const toggleForm = () => {
@@ -20,9 +20,9 @@ function LoginPage() {
     >
       <div className="row justify-content-center">
         <div className="col-md-5 col-lg-3 col-10">
-          <div className="card shadow-sm border-0 rounded-5">
-            <div className="card-body px-4">
-              <h3 className="text-center mb-4">
+          <div className="card border-0 rounded-5">
+            <div className="card-body p-4">
+              <h3 className="text-center fw-bold mb-4 whispr-blue-text">
                 {isLogin ? "Login" : "Sign Up"}
               </h3>
 
@@ -37,14 +37,14 @@ function LoginPage() {
               {/* Toggle Button */}
               <div className="text-center mt-4">
                 {isLogin ? (
-                  <p>
+                  <p className="m-0">
                     Don't have an account?{" "}
                     <button className="btn btn-link" onClick={toggleForm}>
                       Sign Up
                     </button>
                   </p>
                 ) : (
-                  <p>
+                  <p className="m-0">
                     Already have an account?{" "}
                     <button className="btn btn-link" onClick={toggleForm}>
                       Login

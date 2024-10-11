@@ -9,8 +9,10 @@ const useAuth = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    const user_id = localStorage.getItem("user_id");
+    console.log("auth", user_id);
 
-    if (token) {
+    if (token && user_id) { // Check if both token and user_id exist
       try {
         const decoded = jwtDecode(token);
         const currentTime = Date.now() / 1000;
@@ -18,6 +20,8 @@ const useAuth = () => {
         if (decoded.exp < currentTime) {
           // Token expired
           localStorage.removeItem("token");
+          localStorage.removeItem("user_id");
+
           setIsAuthenticated(false);
           if (location.pathname !== "/login") {
             navigate("/login"); // Redirect to login if token expired
@@ -32,6 +36,8 @@ const useAuth = () => {
       } catch (err) {
         console.error("Invalid token");
         localStorage.removeItem("token");
+        localStorage.removeItem("user_id");
+
         setIsAuthenticated(false);
         if (location.pathname !== "/login") {
           navigate("/login"); // Redirect to login on error
