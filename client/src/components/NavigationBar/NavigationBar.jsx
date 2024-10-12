@@ -1,14 +1,23 @@
 import React from "react";
-import { CircleUserRound, Home } from "lucide-react";
+import { CircleUserRound, Home, LogOut } from "lucide-react"; // Import the LogOut icon
+import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
 import "./NavigationBar.css";
 
 function NavigationBar() {
+  const navigate = useNavigate(); // Initialize navigate for redirection
+
   const handleScroll = (e, sectionId) => {
     e.preventDefault();
     const section = document.getElementById(sectionId);
     if (section) {
       section.scrollIntoView({ behavior: "smooth" });
     }
+  };
+
+  const handleLogout = () => {
+    // Clear the token (if stored in cookies)
+    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"; // Expire the token
+    navigate("/login"); // Redirect to login page
   };
 
   return (
@@ -40,8 +49,8 @@ function NavigationBar() {
             <li className="nav-item">
               <a
                 className="nav-link d-flex align-items-center justify-content-center whispr-blue-text"
-                href="#contact"
-                onClick={(e) => handleScroll(e, "contact")}
+                href="#home"
+                onClick={(e) => handleScroll(e, "home")}
               >
                 <Home size={19} className="me-2" /> Home
               </a>
@@ -54,6 +63,14 @@ function NavigationBar() {
               >
                 <CircleUserRound size={19} className="me-2" /> User
               </a>
+            </li>
+            <li className="nav-item">
+              <button
+                className="nav-link d-flex align-items-center justify-content-center whispr-blue-text border-0 bg-transparent"
+                onClick={handleLogout} // Call handleLogout on click
+              >
+                <LogOut size={19} className="me-2" /> Logout
+              </button>
             </li>
           </ul>
         </div>

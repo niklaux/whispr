@@ -23,12 +23,14 @@ function LoginForm() {
     try {
       // Call the loginUser function and get the token and user info
       const data = await loginUser(loginForm);
-      const { token, user } = data;
-      const user_id = user.user_id;  // Get user_id from the user object
+      const { token } = data;
+      // const user_id = user.user_id; // Get user_id from the user object
 
-      // Store token and user_id in localStorage
-      localStorage.setItem("token", token);
-      localStorage.setItem("user_id", user_id); // Save user_id
+      // Store token in cookies instead of localStorage
+      document.cookie = `token=${token}; path=/;`; // Store token in a cookie
+
+      // You may also want to save user_id in localStorage if necessary
+      // localStorage.setItem("user_id", user_id); // Save user_id
 
       console.log("Successful login!");
       navigate("/feed"); // Navigate to feed after successful login

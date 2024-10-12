@@ -3,27 +3,11 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
 const db = require("../db");
+const verifyToken = require("../middleware/auth");
 
-const SECRET_KEY = "password123!";
+const SECRET_KEY = process.env.SECRET_KEY;
 
-// Middleware
-const verifyToken = (req, res, next) => {
-  const token = req.headers["authorization"];
-
-  if (!token) {
-    return res.status(403).json({ msg: "Token is required" });
-  }
-
-  try {
-    const decoded = jwt.verify(token.split(" ")[1], SECRET_KEY);
-    req.user = decoded;
-    next();
-  } catch (error) {
-    return res.status(401).json({ msg: "Invalid Token" });
-  }
-};
-
-router.get("/users", verifyToken, async (req, res) => {
+router.get("/users", async (req, res) => {
   try {
     const result = await db.query("SELECT * FROM users");
     res.status(200).json(result.rows);
@@ -78,15 +62,41 @@ router.post("/users/login", async (req, res) => {
     }
 
     // Create a JWT token
-    const token = jwt.sign({ id: user.id, email: user.email }, SECRET_KEY, {
-      expiresIn: "1h", // Token expires in 1 hour
-    });
+    const token = jwt.sign(
+      { user_id: user.user_id, email: user.email },
+      SECRET_KEY,
+      {
+        expiresIn: "1h", // Token expires in 1 hour
+      }
+    );
 
-     // Return the token and user_id
-     res.status(200).json({ msg: "Successful Login", token, user: { user_id: user.user_id, email: user.email } });
+    // Return the token and user_id
+    res.status(200).json({
+      msg: "Successful Login",
+      token,
+      user: { user_id: user.user_id, email: user.email },
+    });
   } catch (err) {
     console.error(err.message);
     res.status(500).json(err.message);
+  }
+});
+
+router.get("/users/me", verifyToken, async (req, res) => {
+  try {
+    const user_id = req.user.id; // This should now be the correct user_id
+    const result = await db.query("SELECT * FROM users WHERE user_id = $1", [
+      user_id,
+    ]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ msg: user_id, text: "User not found." });
+    }
+
+    res.status(200).json({ msg: result.rows[0] });
+  } catch (err) {
+    console.error(err.message); // Log error for debugging
+    res.status(500).send(err.message);
   }
 });
 

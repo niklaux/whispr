@@ -5,11 +5,25 @@ const { restart } = require("nodemon");
 
 router.get("/posts", async (req, res) => {
   try {
-    const result = await db.query("SELECT * FROM posts");
+    const result = await db.query(`
+      SELECT 
+        Posts.post_id,
+        Posts.content,
+        Posts.image_url,
+        Posts.created_at,
+        Users.username
+      FROM 
+        Posts
+      JOIN 
+        Users ON Posts.user_id = Users.user_id
+      ORDER BY 
+        Posts.created_at DESC
+    `);
+
     res.status(200).json(result.rows);
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ msg: "Error occured" });
+    res.status(500).json({ msg: "Error occurred" });
   }
 });
 
