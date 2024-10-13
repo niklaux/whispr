@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getPosts } from "../../services/posts";
 import { VenetianMask } from "lucide-react";
+import dayjs from "dayjs";
 
 function PostsFeed() {
   const [posts, setPosts] = useState([]);
@@ -44,6 +45,9 @@ function PostsFeed() {
         </div>
       ) : posts.length > 0 ? (
         <div className="row justify-content-center">
+          <div className="col-lg-8 col-md-8 col-sm-12 mb-3 text-muted">
+            Recent Posts
+          </div>
           {posts.map((post, index) => {
             return (
               <div key={index} className="col-lg-8 col-md-8 col-sm-12 mb-3">
@@ -55,7 +59,14 @@ function PostsFeed() {
                     <div className="border rounded-5 p-1">
                       <VenetianMask />
                     </div>
-                    <p className="m-0 p-2">{post?.username}</p>
+                    <div className="flex-fill">
+                      <p className="m-0 p-2">{post?.username} </p>
+                    </div>
+                    <div className="d-flex" >
+                      <p className="mb-1 text-monospace text-muted" style={{ fontSize: "0.8rem" }}>
+                        {dayjs(post?.created_at).format("MMMM D, YYYY h:mm A")}
+                      </p>
+                    </div>
                   </div>
                   <div className="mx-1 text-muted fst-italic text-wrap text-break">
                     {formatText(post.content)}
