@@ -47,7 +47,7 @@ function SignupForm() {
             type="text"
             className="form-control rounded-5"
             id="signUpName"
-            placeholder="Enter your Username"
+            placeholder="Enter an alias. Don't enter your real name."
             name="username"
             value={signUpData.username}
             onChange={handleSignUpData}

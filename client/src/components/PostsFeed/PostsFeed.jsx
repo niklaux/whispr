@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getPosts } from "../../services/posts";
+import { VenetianMask } from "lucide-react";
 
 function PostsFeed() {
   const [posts, setPosts] = useState([]);
@@ -23,7 +24,7 @@ function PostsFeed() {
 
   const formatText = (text) => {
     return text.split("\n").map((line, index) => (
-      <p className="m-0" key={index}>
+      <p className="my-2" key={index}>
         {line}
       </p>
     ));
@@ -46,10 +47,19 @@ function PostsFeed() {
           {posts.map((post, index) => {
             return (
               <div key={index} className="col-lg-8 col-md-8 col-sm-12 mb-3">
-                <div className="white-bg-color p-4 rounded-5" style={{height: "100%"}}>
-                  <p className="m-0 text-muted fst-italic text-wrap text-break">
+                <div
+                  className="white-bg-color p-4 rounded-5"
+                  style={{ height: "100%" }}
+                >
+                  <div className="d-flex align-items-center">
+                    <div className="border rounded-5 p-1">
+                      <VenetianMask />
+                    </div>
+                    <p className="m-0 p-2">{post?.username}</p>
+                  </div>
+                  <div className="mx-1 text-muted fst-italic text-wrap text-break">
                     {formatText(post.content)}
-                  </p>
+                  </div>
                 </div>
               </div>
             );

@@ -32,7 +32,7 @@ router.post("/users", async (req, res) => {
       "INSERT INTO users (username, email, password_hash) VALUES ($1, $2, $3) RETURNING *",
       [username, email, hashedPassword]
     );
-    res.status(201).json(result.rows[0]);
+    res.status(201).json({msg: "Account successfully created."});
   } catch (err) {
     console.error(err);
     res.status(400).send(err.message);
@@ -85,7 +85,7 @@ router.post("/users/login", async (req, res) => {
 router.get("/users/me", verifyToken, async (req, res) => {
   try {
     const user_id = req.user.id; // This should now be the correct user_id
-    const result = await db.query("SELECT * FROM users WHERE user_id = $1", [
+    const result = await db.query("SELECT user_id, username, email FROM users WHERE user_id = $1", [
       user_id,
     ]);
 
