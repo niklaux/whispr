@@ -22,8 +22,13 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
+
 app.use("/api", users);
 app.use("/api", posts);
+
+app.use("/server-status", (req, res) => {
+  res.send("Server is running");
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on PORT ${PORT}`);
