@@ -13,7 +13,7 @@ const useAuth = () => {
   // Define handleUnauthenticated using useCallback to avoid stale closures
   const handleUnauthenticated = useCallback(() => {
     // Clear token (optional)
-    document.cookie = "whisprToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    // document.cookie = "whisprToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     setAuthData(null);
     navigate("/login"); // Redirect to login for all invalid token cases
   }, [navigate]); // Add navigate as a dependency
