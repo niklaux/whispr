@@ -12,14 +12,13 @@ const useAuth = () => {
 
   // Define handleUnauthenticated using useCallback to avoid stale closures
   const handleUnauthenticated = useCallback(() => {
-    // Clear token (optional)
-    // document.cookie = "whisprToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     setAuthData(null);
+    localStorage.removeItem("whisprToken"); // Clear the token from localStorage
     navigate("/login"); // Redirect to login for all invalid token cases
   }, [navigate]); // Add navigate as a dependency
 
   useEffect(() => {
-    const token = getToken(); // Retrieve token from cookies/localStorage
+    const token = getToken(); // Retrieve token from localStorage
 
     // If there's no token, redirect to login
     if (!token) {
@@ -30,7 +29,7 @@ const useAuth = () => {
     const checkAuth = async () => {
       try {
         const response = await axios.get(`${API_URL}/users/me`, {
-          withCredentials: true, // Allow cookies to be sent with requests
+          headers: { Authorization: `Bearer ${token}` }, // Include the token in the Authorization header
         });
 
         if (response.data.msg) {
@@ -52,13 +51,9 @@ const useAuth = () => {
   return authData; // Return only the authentication data
 };
 
-// Helper function to get the token from cookies
+// Helper function to get the token from localStorage
 const getToken = () => {
-  const cookieString = document.cookie
-    .split("; ")
-    .find((row) => row.startsWith("whisprToken="));
-
-  return cookieString ? cookieString.split("=")[1] : null; // Return token or null if not found
+  return localStorage.getItem("whisprToken"); // Retrieve token from localStorage
 };
 
 export default useAuth;

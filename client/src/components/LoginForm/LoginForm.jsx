@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { loginUser } from "../../services/users";
+import { loginUser } from "../../services/users"; // Assuming you have a loginUser function that makes the API call
 import { useNavigate } from "react-router-dom";
 
 function LoginForm() {
@@ -24,13 +24,9 @@ function LoginForm() {
       // Call the loginUser function and get the token and user info
       const data = await loginUser(loginForm);
       const { token } = data;
-      // const user_id = user.user_id; // Get user_id from the user object
 
-      // Store token in cookies instead of localStorage
-      document.cookie = `whisprToken=${token}; path=/;`; // Store token in a cookie
-
-      // You may also want to save user_id in localStorage if necessary
-      // localStorage.setItem("user_id", user_id); // Save user_id
+      // Store token in localStorage instead of cookies
+      localStorage.setItem("whisprToken", token); // Store token in local storage
 
       console.log("Successful login!");
       navigate("/feed"); // Navigate to feed after successful login

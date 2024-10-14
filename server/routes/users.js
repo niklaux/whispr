@@ -32,13 +32,14 @@ router.post("/users", async (req, res) => {
       "INSERT INTO users (username, email, password_hash) VALUES ($1, $2, $3) RETURNING *",
       [username, email, hashedPassword]
     );
-    res.status(201).json({msg: "Account successfully created."});
+    res.status(201).json({ msg: "Account successfully created." });
   } catch (err) {
     console.error(err);
     res.status(400).send(err.message);
   }
 });
 
+// Example of the modified login endpoint
 router.post("/users/login", async (req, res) => {
   const { email, password } = req.body;
 
@@ -70,18 +71,10 @@ router.post("/users/login", async (req, res) => {
       }
     );
 
-    // Set the cookie with the token
-    res.cookie("whisprToken", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Only send over HTTPS in production
-      sameSite: "Lax", // Prevent CSRF attacks
-      path: "/", // Ensure the cookie is accessible to all routes
-      maxAge: 3600000, // 1 hour
-    });
-
-    // Return user info without the token
+    // Return the token and user info
     res.status(200).json({
       msg: "Successful Login",
+      token, // Return token in the response
       user: { user_id: user.user_id, email: user.email },
     });
   } catch (err) {
@@ -90,13 +83,13 @@ router.post("/users/login", async (req, res) => {
   }
 });
 
-
 router.get("/users/me", verifyToken, async (req, res) => {
   try {
     const user_id = req.user.id; // This should now be the correct user_id
-    const result = await db.query("SELECT user_id, username, email FROM users WHERE user_id = $1", [
-      user_id,
-    ]);
+    const result = await db.query(
+      "SELECT user_id, username, email FROM users WHERE user_id = $1",
+      [user_id]
+    );
 
     if (result.rows.length === 0) {
       return res.status(404).json({ msg: user_id, text: "User not found." });
@@ -111,12 +104,14 @@ router.get("/users/me", verifyToken, async (req, res) => {
 
 router.put("/users", verifyToken, async (req, res) => {
   const { email, username } = req.body;
-  const { id } = req.user;  // Extract user ID from the verified token
+  const { id } = req.user; // Extract user ID from the verified token
 
   try {
     // Validate the input
     if (!email || !username) {
-      return res.status(400).json({ message: "Email and Username are required" });
+      return res
+        .status(400)
+        .json({ message: "Email and Username are required" });
     }
 
     // Check if the email or username already exists for another user
@@ -126,7 +121,9 @@ router.put("/users", verifyToken, async (req, res) => {
     );
 
     if (checkUser.rows.length > 0) {
-      return res.status(409).json({ message: "Email or Username already in use" });
+      return res
+        .status(409)
+        .json({ message: "Email or Username already in use" });
     }
 
     // Update the user's email and username
@@ -139,7 +136,9 @@ router.put("/users", verifyToken, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.status(200).json({ message: "User updated successfully", user: result.rows[0] });
+    res
+      .status(200)
+      .json({ message: "User updated successfully", user: result.rows[0] });
   } catch (err) {
     console.error(err);
     res.status(500).send(err.message);
@@ -148,16 +147,20 @@ router.put("/users", verifyToken, async (req, res) => {
 
 router.put("/users/password", verifyToken, async (req, res) => {
   const { currentPassword, newPassword } = req.body;
-  const { id } = req.user;  // Extract user ID from the verified token
+  const { id } = req.user; // Extract user ID from the verified token
 
   try {
     // Validate the input
     if (!currentPassword || !newPassword) {
-      return res.status(400).json({ message: "Current password and new password are required" });
+      return res
+        .status(400)
+        .json({ message: "Current password and new password are required" });
     }
 
     // Check if the user exists
-    const result = await db.query("SELECT * FROM users WHERE user_id = $1", [id]);
+    const result = await db.query("SELECT * FROM users WHERE user_id = $1", [
+      id,
+    ]);
     if (result.rows.length === 0) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -165,7 +168,10 @@ router.put("/users/password", verifyToken, async (req, res) => {
     const user = result.rows[0];
 
     // Verify the current password
-    const isPasswordValid = await bcrypt.compare(currentPassword, user.password_hash);
+    const isPasswordValid = await bcrypt.compare(
+      currentPassword,
+      user.password_hash
+    );
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Current password is incorrect" });
     }
@@ -175,7 +181,10 @@ router.put("/users/password", verifyToken, async (req, res) => {
     const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
 
     // Update the password in the database
-    await db.query("UPDATE users SET password_hash = $1 WHERE user_id = $2", [hashedNewPassword, id]);
+    await db.query("UPDATE users SET password_hash = $1 WHERE user_id = $2", [
+      hashedNewPassword,
+      id,
+    ]);
 
     res.status(200).json({ message: "Password updated successfully" });
   } catch (err) {

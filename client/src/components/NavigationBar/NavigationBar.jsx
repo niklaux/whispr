@@ -7,8 +7,8 @@ function NavigationBar() {
   const navigate = useNavigate(); // Initialize navigate for redirection
 
   const handleLogout = () => {
-    // Clear the token (if stored in cookies)
-    document.cookie = "whisprToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"; // Expire the token
+    // Clear the token from localStorage
+    localStorage.removeItem("whisprToken"); // Remove the token
     navigate("/login"); // Redirect to login page
   };
 
