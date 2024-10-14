@@ -4,7 +4,7 @@ const SECRET_KEY = process.env.SECRET_KEY;
 
 const verifyToken = (req, res, next) => {
   const token = req.cookies.whisprToken; // Ensure the token is being sent in the cookies
-
+  console.log("Received token:", token); // Add this log to check if the token is received
   if (!token) {
     return res.status(401).json({ msg: "No Token Provided" });
   }
