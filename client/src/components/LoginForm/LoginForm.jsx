@@ -27,7 +27,7 @@ function LoginForm() {
       // const user_id = user.user_id; // Get user_id from the user object
 
       // Store token in cookies instead of localStorage
-      document.cookie = `token=${token}; path=/;`; // Store token in a cookie
+      document.cookie = `whisprToken=${token}; path=/;`; // Store token in a cookie
 
       // You may also want to save user_id in localStorage if necessary
       // localStorage.setItem("user_id", user_id); // Save user_id

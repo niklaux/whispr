@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const SECRET_KEY = process.env.SECRET_KEY;
 
 const verifyToken = (req, res, next) => {
-  const token = req.cookies.token; // Ensure the token is being sent in the cookies
+  const token = req.cookies.whisprToken; // Ensure the token is being sent in the cookies
 
   if (!token) {
     return res.status(401).json({ msg: "No Token Provided" });

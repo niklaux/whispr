@@ -17,8 +17,8 @@ function FeedPage() {
   return (
     <div>
       <NavigationBar />
-      <CreatePost onPostCreated={handleRefresh} /> {/* Pass function as prop */}
-      <PostsFeed refresh={refresh} /> {/* Pass refresh state as prop */}
+      <CreatePost onPostCreated={handleRefresh} /> 
+      <PostsFeed refresh={refresh} />
     </div>
   );
 }
