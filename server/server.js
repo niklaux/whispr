@@ -9,18 +9,18 @@ const cors = require("cors");
 
 const app = express();
 
+// Use the environment variable for the origin
+const clientOrigin = process.env.CLIENT_ORIGIN;
+
 app.use(
   cors({
-    origin: "http://localhost:3000", // Your frontend URL
+    origin: clientOrigin, // Use the env variable here
     credentials: true, // Allow credentials (cookies) to be sent
   })
 );
+
 app.use(express.json());
 app.use(cookieParser());
-
-app.use("/", (req, res) => {
-  res.send("Server is running")
-});
 
 app.use("/api", users);
 app.use("/api", posts);
