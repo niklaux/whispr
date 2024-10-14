@@ -27,8 +27,6 @@ function LoginForm() {
 
       // Store token in localStorage instead of cookies
       localStorage.setItem("whisprToken", token); // Store token in local storage
-
-      console.log("Successful login!");
       navigate("/feed"); // Navigate to feed after successful login
     } catch (err) {
       console.error("Login failed:", err);

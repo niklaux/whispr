@@ -6,7 +6,6 @@ function AccountSettings({ data }) {
     username: "",
     email: "",
   });
-  console.log("test", data);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -60,7 +59,6 @@ function AccountSettings({ data }) {
     try {
       const updatedUser = await updateUser(accountDetails);
       setSuccess("Account details updated successfully!");
-      console.log("Updated user:", updatedUser);
       setIsChanged(false);
     } catch (err) {
       setError(err.message);
@@ -79,7 +77,6 @@ function AccountSettings({ data }) {
     try {
       const response = await updatePassword(passwordData);
       setPasswordSuccess(response.message);
-      console.log("Password updated successfully:", response);
       setPasswordData({ currentPassword: "", newPassword: "" }); // Clear fields after success
     } catch (err) {
       setPasswordError(err.message);

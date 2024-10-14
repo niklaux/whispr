@@ -5,7 +5,6 @@ const SECRET_KEY = process.env.SECRET_KEY;
 const verifyToken = (req, res, next) => {
   // Retrieve the token from the Authorization header
   const token = req.headers.authorization?.split(" ")[1]; // Get the token part from the "Bearer token" format
-  console.log("Received token:", token); // Log the received token for debugging
 
   // Check if the token is provided
   if (!token) {

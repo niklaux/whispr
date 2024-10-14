@@ -30,7 +30,6 @@ const apiRequest = async (method, url, data = null) => {
 
 // Login user
 export const loginUser = async (loginData) => {
-  console.log("API_URL:", API_URL); // Log API_URL for debugging
   return await apiRequest("post", `${API_URL}/users/login`, loginData);
 };
 

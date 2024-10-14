@@ -43,10 +43,8 @@ function CreatePost({ onPostCreated }) {
 
     try {
       const response = await createPost(content);
-      console.log(response);
 
       if (response.status === 201) {
-        console.log("Create post success.");
         setSnackbar({
           show: true,
           message: "Post created successfully!",
