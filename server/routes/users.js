@@ -63,26 +63,25 @@ router.post("/users/login", async (req, res) => {
 
     // Create a JWT token
     const token = jwt.sign(
-      { user_id: user.user_id, email: user.email, password_hash: user.password_hash },
+      { user_id: user.user_id, email: user.email },
       SECRET_KEY,
       {
         expiresIn: "1h", // Token expires in 1 hour
       }
     );
 
-    // Set the token in a cookie
+    // Set the cookie with the token
     res.cookie("whisprToken", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // This should be true in production
-      sameSite: "Lax",
-      path: "/",
-      maxAge: 3600000,  // 1 hour
+      secure: process.env.NODE_ENV === "production", // Only send over HTTPS in production
+      sameSite: "Lax", // Prevent CSRF attacks
+      path: "/", // Ensure the cookie is accessible to all routes
+      maxAge: 3600000, // 1 hour
     });
 
-    // Return the token and user_id
+    // Return user info without the token
     res.status(200).json({
       msg: "Successful Login",
-      token,
       user: { user_id: user.user_id, email: user.email },
     });
   } catch (err) {
@@ -90,6 +89,7 @@ router.post("/users/login", async (req, res) => {
     res.status(500).json(err.message);
   }
 });
+
 
 router.get("/users/me", verifyToken, async (req, res) => {
   try {
