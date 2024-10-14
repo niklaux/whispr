@@ -3,26 +3,25 @@ import React, { useEffect, useState } from "react";
 import { createPost } from "../../services/posts";
 import useAuth from "../../hooks/useAuth";
 
-function CreatePost() {
-  const data = useAuth(); // Get msg object from useAuth
-
+function CreatePost({ onPostCreated }) {
+  // Add prop here
+  const data = useAuth();
   const [content, setContent] = useState({
     content: "",
-    user_id: data?.msg?.user_id, // Set user_id directly here
+    user_id: data?.msg?.user_id,
   });
 
-  // Update user_id whenever data changes
   useEffect(() => {
     if (data?.msg?.user_id) {
       setContent((prevContent) => ({
         ...prevContent,
-        user_id: data.msg.user_id, // Update user_id in state
+        user_id: data.msg.user_id,
       }));
     }
-  }, [data]); // Run effect when data changes
+  }, [data]);
 
-  const maxChars = 150; // Define maximum characters
-  const [loading, setLoading] = useState(false); // Loading state
+  const maxChars = 150;
+  const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({
     show: false,
     message: "",
@@ -30,7 +29,6 @@ function CreatePost() {
   });
 
   const handleChange = (e) => {
-    // Update content, respecting the 150 character limit
     if (e.target.value.length <= maxChars) {
       setContent({
         ...content,
@@ -40,8 +38,8 @@ function CreatePost() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission
-    setLoading(true); // Start loading
+    e.preventDefault();
+    setLoading(true);
 
     try {
       const response = await createPost(content);
@@ -54,6 +52,7 @@ function CreatePost() {
           message: "Post created successfully!",
           success: true,
         });
+        onPostCreated(); // Call the function to refresh the feed
         setContent((prevContent) => ({
           ...prevContent,
           content: "",
@@ -74,9 +73,9 @@ function CreatePost() {
         success: false,
       });
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
       setTimeout(() => {
-        setSnackbar({ show: false, message: "", success: true }); // Hide snackbar after 3 seconds
+        setSnackbar({ show: false, message: "", success: true });
       }, 3000);
     }
   };
@@ -94,10 +93,10 @@ function CreatePost() {
                 placeholder="Share your thoughts. Maximum of 150 characters only."
                 className="form-control rounded-4"
                 name="content"
-                value={content.content} // Ensure the value is linked
+                value={content.content}
                 onChange={handleChange}
-                rows={3} // You can adjust the number of rows for the textbox
-                style={{ resize: "none", width: "100%" }} // Prevent resizing of the textarea
+                rows={3}
+                style={{ resize: "none", width: "100%" }}
               />
               {loading ? (
                 <div className="ms-3">
@@ -128,14 +127,13 @@ function CreatePost() {
         </div>
       </div>
 
-      {/* Snackbar for feedback */}
       {snackbar.show && (
         <div
           className={`alert ${
             snackbar.success ? "alert-success" : "alert-danger"
           } position-fixed bottom-0 end-0 m-3`}
           role="alert"
-          style={{ zIndex: 1050 }} // Ensure it appears above other content
+          style={{ zIndex: 1050 }}
         >
           {snackbar.message}
         </div>
