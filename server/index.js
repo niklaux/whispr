@@ -19,16 +19,16 @@ app.use(
   })
 );
 
+app.get("/", (req, res) => {
+  res.send("Welcome to the Express API!"); // You can customize this message
+});
+
 app.use(express.json());
 app.use(cookieParser());
 
 
 app.use("/api", users);
 app.use("/api", posts);
-
-app.use("/server-status", (req, res) => {
-  res.send("Server is running");
-});
 
 app.listen(PORT, () => {
   console.log(`Server is running on PORT ${PORT}`);
