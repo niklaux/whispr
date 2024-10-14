@@ -39,7 +39,7 @@ router.get("/posts", verifyToken, async (req, res) => {
   }
 });
 
-router.post("/posts", async (req, res) => {
+router.post("/posts", verifyToken, async (req, res) => {
   const { content, user_id } = req.body;
 
   if (!content) {
