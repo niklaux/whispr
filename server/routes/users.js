@@ -73,7 +73,7 @@ router.post("/users/login", async (req, res) => {
     // Set the token in a cookie
     res.cookie("whisprToken", token, {
       httpOnly: true,
-      secure: false,  // Change to 'true' when using HTTPS
+      secure: process.env.NODE_ENV === "production", // This should be true in production
       sameSite: "Lax",
       path: "/",
       maxAge: 3600000,  // 1 hour
