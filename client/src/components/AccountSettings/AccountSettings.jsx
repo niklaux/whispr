@@ -57,7 +57,15 @@ function AccountSettings({ data }) {
     setSuccess(null);
 
     try {
+      // Update user details and store the updated user data
       const updatedUser = await updateUser(accountDetails);
+
+      // Update the local state with the updated user details
+      setAccountDetails({
+        username: updatedUser.username, // assuming the API returns the updated user data
+        email: updatedUser.email,
+      });
+
       setSuccess("Account details updated successfully!");
       setIsChanged(false);
     } catch (err) {
@@ -77,6 +85,7 @@ function AccountSettings({ data }) {
     try {
       const response = await updatePassword(passwordData);
       setPasswordSuccess(response.message);
+      console.log("Password updated successfully:", response);
       setPasswordData({ currentPassword: "", newPassword: "" }); // Clear fields after success
     } catch (err) {
       setPasswordError(err.message);
