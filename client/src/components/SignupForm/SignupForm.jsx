@@ -45,7 +45,7 @@ function SignupForm() {
           </label>
           <input
             type="text"
-            className="form-control rounded-5"
+            className="form-control rounded-4"
             id="signUpName"
             placeholder="Enter an alias. Don't enter your real name."
             name="username"
@@ -60,7 +60,7 @@ function SignupForm() {
           </label>
           <input
             type="email"
-            className="form-control rounded-5"
+            className="form-control rounded-4"
             id="signUpEmail"
             placeholder="Enter your email"
             name="email"
@@ -75,7 +75,7 @@ function SignupForm() {
           </label>
           <input
             type="password"
-            className="form-control rounded-5"
+            className="form-control rounded-4"
             id="signUpPassword"
             placeholder="Enter your password"
             name="password"
@@ -94,7 +94,7 @@ function SignupForm() {
           </div>
         )}
         <div className="d-grid">
-          <button type="submit" className="btn btn-success rounded-5">
+          <button type="submit" className="btn btn-success rounded-4">
             Sign Up
           </button>
         </div>

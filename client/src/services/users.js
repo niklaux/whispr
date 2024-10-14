@@ -20,3 +20,26 @@ export const signupUser = async (signUpData) => {
     throw new Error(err.response?.data?.message || err.message); // throw error to handle it in the form
   }
 };
+
+export const updateUser = async (updateData) => {
+  try {
+    // This PUT request expects email and username in the body
+    const response = await axios.put(`${API_URL}/users`, updateData, {
+      withCredentials: true, // ensures cookies (JWT token) are sent along with the request
+    });
+    return response.data;
+  } catch (err) {
+    throw new Error(err.response?.data?.message || err.message);
+  }
+};
+
+export const updatePassword = async (passwordData) => {
+  try {
+    const response = await axios.put(`${API_URL}/users/password`, passwordData, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (err) {
+    throw new Error(err.response?.data?.message || err.message);
+  }
+};

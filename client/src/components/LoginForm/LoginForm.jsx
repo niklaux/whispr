@@ -49,7 +49,7 @@ function LoginForm() {
           </label>
           <input
             type="email"
-            className="form-control rounded-5"
+            className="form-control rounded-4"
             id="loginEmail"
             placeholder="Enter your email"
             name="email"
@@ -64,7 +64,7 @@ function LoginForm() {
           </label>
           <input
             type="password"
-            className="form-control rounded-5"
+            className="form-control rounded-4"
             id="loginPassword"
             placeholder=""
             name="password"
@@ -79,7 +79,7 @@ function LoginForm() {
           </div>
         )}
         <div className="d-grid">
-          <button type="submit" className="btn btn-primary rounded-5">
+          <button type="submit" className="btn btn-primary rounded-4 whispr-blue-button">
             Login
           </button>
         </div>

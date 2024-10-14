@@ -21,3 +21,24 @@ body {
 .whispr-blue-text {
   color: #00ACFF !important;
 }
+
+.whispr-blue-button {
+  background-color: #00ACFF; /* Button background */
+  color: white; /* Text color */
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover effect */
+.whispr-blue-button:hover {
+  background-color: #008CDB; /* Darker shade of the base color on hover */
+}
+
+/* Active (click) effect */
+.whispr-blue-button:active {
+  background-color: #006699; /* Even darker shade when the button is clicked */
+}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react"; // Import useCallback
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 
@@ -10,12 +10,20 @@ const useAuth = () => {
   const navigate = useNavigate();
   const location = useLocation(); // Get current location
 
-  useEffect(() => {
-    const token = getToken(); // Retrieve token from cookies/localStorage (your method here)
+  // Define handleUnauthenticated using useCallback to avoid stale closures
+  const handleUnauthenticated = useCallback(() => {
+    // Clear token (optional)
+    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    setAuthData(null);
+    navigate("/login"); // Redirect to login for all invalid token cases
+  }, [navigate]); // Add navigate as a dependency
 
-    // If there's no token, clear the state and skip the API call
+  useEffect(() => {
+    const token = getToken(); // Retrieve token from cookies/localStorage
+
+    // If there's no token, redirect to login
     if (!token) {
-      setAuthData(null);
+      handleUnauthenticated();
       return;
     }
 
@@ -28,9 +36,6 @@ const useAuth = () => {
         if (response.data.msg) {
           // User is authenticated, store the data
           setAuthData(response.data);
-          if (location.pathname === "/login") {
-            navigate("/feed"); // Redirect to feed if already logged in and on login page
-          }
         } else {
           handleUnauthenticated();
         }
@@ -41,21 +46,13 @@ const useAuth = () => {
       }
     };
 
-    const handleUnauthenticated = () => {
-      // Clear token (optional)
-      document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-      setAuthData(null);
-      if (location.pathname === "/feed") {
-        navigate("/login"); // Redirect to login if not authenticated and on feed page
-      }
-    };
-
-    checkAuth();
-  }, [navigate, location.pathname]);
+    checkAuth(); // Check authentication on mount
+  }, [handleUnauthenticated, location.pathname]); // Include handleUnauthenticated in dependencies
 
   return authData; // Return only the authentication data
 };
 
+// Helper function to get the token from cookies
 const getToken = () => {
   const cookieString = document.cookie
     .split("; ")

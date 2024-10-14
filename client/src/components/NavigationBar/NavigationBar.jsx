@@ -1,18 +1,10 @@
 import React from "react";
-import { CircleUserRound, Home, LogOut } from "lucide-react"; // Import the LogOut icon
-import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
+import { CircleUserRound, LogOut } from "lucide-react"; // Import the LogOut icon
+import { Link, useNavigate } from "react-router-dom"; // Import useNavigate for redirection
 import "./NavigationBar.css";
 
 function NavigationBar() {
   const navigate = useNavigate(); // Initialize navigate for redirection
-
-  const handleScroll = (e, sectionId) => {
-    e.preventDefault();
-    const section = document.getElementById(sectionId);
-    if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
-    }
-  };
 
   const handleLogout = () => {
     // Clear the token (if stored in cookies)
@@ -23,13 +15,13 @@ function NavigationBar() {
   return (
     <nav className="navbar navbar-expand-lg py-2 fixed-top">
       <div className="container d-flex">
-        <a
+        <Link
           className="navbar-brand fw-bold whispr-blue-text"
           href="#home"
-          onClick={(e) => handleScroll(e, "home")}
+          to="/feed"
         >
           whispr
-        </a>
+        </Link>
         <button
           className="navbar-toggler"
           type="button"
@@ -47,31 +39,30 @@ function NavigationBar() {
         >
           <ul className="navbar-nav">
             <li className="nav-item">
-              <a
+              <Link
                 className="nav-link d-flex align-items-center justify-content-center whispr-blue-text"
-                href="#home"
-                onClick={(e) => handleScroll(e, "home")}
+                to="/my-account"
               >
-                <Home size={19} className="me-2" /> Home
-              </a>
+                <CircleUserRound size={19} className="me-2" /> User
+              </Link>
             </li>
             <li className="nav-item">
               <a
                 className="nav-link d-flex align-items-center justify-content-center whispr-blue-text"
                 href="#contact"
-                onClick={(e) => handleScroll(e, "contact")}
+                onClick={handleLogout} // Call handleLogout on click
               >
-                <CircleUserRound size={19} className="me-2" /> User
+                <LogOut size={19} className="me-2" /> Logout
               </a>
             </li>
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <button
                 className="nav-link d-flex align-items-center justify-content-center whispr-blue-text border-0 bg-transparent"
                 onClick={handleLogout} // Call handleLogout on click
               >
                 <LogOut size={19} className="me-2" /> Logout
               </button>
-            </li>
+            </li> */}
           </ul>
         </div>
       </div>

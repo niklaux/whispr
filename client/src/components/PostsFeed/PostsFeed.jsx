@@ -11,7 +11,7 @@ function PostsFeed() {
     try {
       const response = await getPosts();
       setPosts(response.data); // Assuming response.data contains the array of posts
-      console.log("Fetched posts:", response.data); // Log the fetched posts here
+      // console.log("Fetched posts:", response.data); // Log the fetched posts here
     } catch (err) {
       console.error("Error fetching posts:", err);
     } finally {
@@ -46,7 +46,7 @@ function PostsFeed() {
       ) : posts.length > 0 ? (
         <div className="row justify-content-center">
           <div className="col-lg-8 col-md-8 col-sm-12 mb-3 text-muted">
-            Recent Posts
+            <p className="m-0 fw-bold">Recent Posts</p>
           </div>
           {posts.map((post, index) => {
             return (
@@ -62,8 +62,11 @@ function PostsFeed() {
                     <div className="flex-fill">
                       <p className="m-0 p-2">{post?.username} </p>
                     </div>
-                    <div className="d-flex" >
-                      <p className="mb-1 text-monospace text-muted" style={{ fontSize: "0.8rem" }}>
+                    <div className="d-flex">
+                      <p
+                        className="mb-1 text-monospace text-muted"
+                        style={{ fontSize: "0.8rem" }}
+                      >
                         {dayjs(post?.created_at).format("MMMM D, YYYY h:mm A")}
                       </p>
                     </div>
