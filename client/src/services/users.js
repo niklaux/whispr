@@ -2,44 +2,49 @@ import axios from "axios";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-export const loginUser = async (loginData) => {
-  console.log(API_URL)
+// Helper function to get the token from localStorage
+const getToken = () => {
+  return localStorage.getItem("whisprToken"); // Retrieve token from localStorage
+};
+
+// Helper function to make API requests
+const apiRequest = async (method, url, data = null) => {
   try {
-    const response = await axios.post(`${API_URL}/users/login`, loginData);
-    return response.data;
+    const config = {
+      method,
+      url,
+      data,
+      headers: {
+        Authorization: `Bearer ${getToken()}`, // Include the token in the Authorization header
+      },
+      withCredentials: true, // Ensure cookies (JWT token) are sent along with the request
+    };
+
+    const response = await axios(config);
+    return response.data; // Return the API response data
   } catch (error) {
-    throw error.response ? error.response.data : error.message;
+    // Throw an error with a consistent message format
+    throw new Error(error.response?.data?.message || error.message);
   }
 };
 
+// Login user
+export const loginUser = async (loginData) => {
+  console.log("API_URL:", API_URL); // Log API_URL for debugging
+  return await apiRequest("post", `${API_URL}/users/login`, loginData);
+};
+
+// Sign up user
 export const signupUser = async (signUpData) => {
-  try {
-    const response = await axios.post(`${API_URL}/users`, signUpData);
-    return response.data; // return the API response data
-  } catch (err) {
-    throw new Error(err.response?.data?.message || err.message); // throw error to handle it in the form
-  }
+  return await apiRequest("post", `${API_URL}/users`, signUpData);
 };
 
+// Update user details
 export const updateUser = async (updateData) => {
-  try {
-    // This PUT request expects email and username in the body
-    const response = await axios.put(`${API_URL}/users`, updateData, {
-      withCredentials: true, // ensures cookies (JWT token) are sent along with the request
-    });
-    return response.data;
-  } catch (err) {
-    throw new Error(err.response?.data?.message || err.message);
-  }
+  return await apiRequest("put", `${API_URL}/users`, updateData);
 };
 
+// Update user password
 export const updatePassword = async (passwordData) => {
-  try {
-    const response = await axios.put(`${API_URL}/users/password`, passwordData, {
-      withCredentials: true,
-    });
-    return response.data;
-  } catch (err) {
-    throw new Error(err.response?.data?.message || err.message);
-  }
+  return await apiRequest("put", `${API_URL}/users/password`, passwordData);
 };

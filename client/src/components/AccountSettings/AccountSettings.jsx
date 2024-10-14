@@ -6,19 +6,20 @@ function AccountSettings({ data }) {
     username: "",
     email: "",
   });
-  
+  console.log("test", data);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
-  
+
   const [isChanged, setIsChanged] = useState(false);
-  
+
   // Password state
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
     newPassword: "",
   });
-  
+
   const [passwordLoading, setPasswordLoading] = useState(false);
   const [passwordError, setPasswordError] = useState(null);
   const [passwordSuccess, setPasswordSuccess] = useState(null);
@@ -119,8 +120,8 @@ function AccountSettings({ data }) {
                 onChange={handleInputChange}
               />
             </div>
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className="btn btn-primary rounded-4 whispr-blue-button"
               disabled={!isChanged || loading}
             >
@@ -134,7 +135,9 @@ function AccountSettings({ data }) {
           >
             <p className="fw-bold text-muted">Change Password</p>
             {passwordError && <p className="text-danger">{passwordError}</p>}
-            {passwordSuccess && <p className="text-success">{passwordSuccess}</p>}
+            {passwordSuccess && (
+              <p className="text-success">{passwordSuccess}</p>
+            )}
             <div className="mb-3">
               <input
                 type="password"
@@ -155,8 +158,8 @@ function AccountSettings({ data }) {
                 onChange={handlePasswordChange}
               />
             </div>
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className="btn btn-primary rounded-4 whispr-blue-button"
               disabled={passwordLoading} // Disable button if loading
             >
