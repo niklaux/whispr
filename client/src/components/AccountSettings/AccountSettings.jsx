@@ -85,7 +85,7 @@ function AccountSettings({ data }) {
     try {
       const response = await updatePassword(passwordData);
       setPasswordSuccess(response.message);
-      console.log("Password updated successfully:", response);
+      // console.log("Password updated successfully:", response);
       setPasswordData({ currentPassword: "", newPassword: "" }); // Clear fields after success
     } catch (err) {
       setPasswordError(err.message);
@@ -128,7 +128,7 @@ function AccountSettings({ data }) {
             </div>
             <button
               type="submit"
-              className="btn btn-primary rounded-4 whispr-blue-button"
+              className="btn btn-sm btn-primary rounded-4 whispr-blue-button"
               disabled={!isChanged || loading}
             >
               {loading ? "Saving..." : "Save Changes"}

@@ -3,6 +3,7 @@ import { useState } from "react";
 import LoginForm from "../../components/LoginForm/LoginForm";
 import SignupForm from "../../components/SignupForm/SignupForm";
 import useAuth from "../../hooks/useAuth";
+import Footer from "../../components/Footer/Footer";
 
 function LoginPage() {
   useAuth();
@@ -18,7 +19,7 @@ function LoginPage() {
       className="d-flex flex-column justify-content-center common-bg-color overflow-hidden"
       style={{ height: "100vh" }}
     >
-      <div className="row justify-content-center">
+      <div className="row justify-content-center my-auto">
         <div className="col-md-5 col-lg-3 col-10">
           <div className="card border-0 rounded-5">
             <div className="card-body p-4">
@@ -56,6 +57,7 @@ function LoginPage() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

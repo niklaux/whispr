@@ -2,10 +2,14 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db");
 const { restart } = require("nodemon");
+const verifyToken = require("../middleware/auth");
 
-router.get("/posts", async (req, res) => {
+router.get("/posts", verifyToken, async (req, res) => {
+  const { user_id } = req.query;  // Get user_id from query parameters
+
   try {
-    const result = await db.query(`
+    // Base SQL query
+    let query = `
       SELECT 
         Posts.post_id,
         Posts.content,
@@ -16,9 +20,17 @@ router.get("/posts", async (req, res) => {
         Posts
       JOIN 
         Users ON Posts.user_id = Users.user_id
-      ORDER BY 
-        Posts.created_at DESC
-    `);
+    `;
+
+    // If user_id is provided, filter posts by user_id
+    if (user_id) {
+      query += ` WHERE Posts.user_id = $1`;
+    }
+
+    query += ` ORDER BY Posts.created_at DESC`; // Order by created_at
+
+    // Execute the query
+    const result = await db.query(query, user_id ? [user_id] : []);
 
     res.status(200).json(result.rows);
   } catch (err) {

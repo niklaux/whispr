@@ -82,8 +82,9 @@ function CreatePost({ onPostCreated }) {
     <div className="container ">
       <div className="row justify-content-center">
         <div className="col-lg-8 col-md-8 col-sm-12">
+          <p className="mb-3 fw-bold text-muted mt-5">Welcome, {data?.msg?.username}!</p>
           <form
-            className="white-bg-color my-5 p-4 rounded-5"
+            className="white-bg-color mb-5 p-4 rounded-5"
             onSubmit={handleSubmit}
           >
             <div className="d-flex align-items-center">

@@ -4,7 +4,7 @@ import { VenetianMask } from "lucide-react";
 import dayjs from "dayjs";
 
 function PostsFeed({ refresh }) {
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState([]); // Ensure posts is initialized as an empty array
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1); // Current page
   const postsPerPage = 5; // Posts per page
@@ -12,7 +12,7 @@ function PostsFeed({ refresh }) {
   const fetchPosts = async () => {
     try {
       const response = await getPosts();
-      setPosts(response.data);
+      setPosts(response); // Assuming response contains the posts directly
     } catch (err) {
       console.error("Error fetching posts:", err);
     } finally {
@@ -97,7 +97,7 @@ function PostsFeed({ refresh }) {
             </button>
             <p className="m-0">Page {currentPage} of {totalPages}</p>
             <button
-              className="btn btn-outline-primary  rounded-4"
+              className="btn btn-outline-primary rounded-4"
               onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
             >
