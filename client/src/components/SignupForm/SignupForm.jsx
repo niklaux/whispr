@@ -9,6 +9,7 @@ function SignupForm() {
   };
   const [signUpData, setSignUpData] = useState(initialFormData);
   const [message, setMessage] = useState(""); // For success/error messages
+  const [loading, setLoading] = useState(false); // Loading state
 
   const handleSignUpData = (e) => {
     setSignUpData({
@@ -20,6 +21,7 @@ function SignupForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage(""); // Clear previous messages
+    setLoading(true); // Start loading
 
     try {
       const response = await signupUser(signUpData); // Make API call
@@ -30,9 +32,12 @@ function SignupForm() {
         setMessage("Account created successfully!"); // Show success message
       }
     } catch (err) {
+      console.log(err)
       const errorMsg =
         err.response?.data?.error || "An error occurred. Please try again.";
       setMessage(errorMsg); // Show backend error or generic error message
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -94,8 +99,20 @@ function SignupForm() {
           </div>
         )}
         <div className="d-grid">
-          <button type="submit" className="btn btn-success rounded-4">
-            Sign Up
+          <button
+            type="submit"
+            className="btn btn-success rounded-4"
+            disabled={loading} // Disable button while loading
+          >
+            {loading ? (
+              <span
+                className="spinner-border spinner-border-sm"
+                role="status"
+                aria-hidden="true"
+              ></span>
+            ) : (
+              "Sign Up"
+            )}
           </button>
         </div>
       </form>

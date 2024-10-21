@@ -7,6 +7,7 @@ function LoginForm() {
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false); // Loading state
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
@@ -19,6 +20,7 @@ function LoginForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Start loading
 
     try {
       // Call the loginUser function and get the token and user info
@@ -31,6 +33,8 @@ function LoginForm() {
     } catch (err) {
       console.error("Login failed:", err);
       setErrorMessage("Login failed. Please check your email and password.");
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -73,8 +77,20 @@ function LoginForm() {
           </div>
         )}
         <div className="d-grid">
-          <button type="submit" className="btn btn-primary rounded-4 whispr-blue-button">
-            Login
+          <button
+            type="submit"
+            className="btn btn-primary rounded-4 whispr-blue-button"
+            disabled={loading} // Disable button while loading
+          >
+            {loading ? (
+              <span
+                className="spinner-border spinner-border-sm"
+                role="status"
+                aria-hidden="true"
+              ></span>
+            ) : (
+              "Login"
+            )}
           </button>
         </div>
       </form>
