@@ -17,7 +17,6 @@ const apiRequest = async (method, url, data = null) => {
       headers: {
         Authorization: `Bearer ${getToken()}`, // Include the token in the Authorization header
       },
-      withCredentials: true, // Ensure cookies (JWT token) are sent along with the request
     };
 
     const response = await axios(config);
